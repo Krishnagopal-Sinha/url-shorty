@@ -92,17 +92,29 @@ function App() {
       if (response.ok) {
         const data = await response.json();
         const newShortUrl = `${window.location.origin}/${data.short_code}`;
+
+        // Check if this URL already exists in our local storage
+        const existingUrl = urls.find((u) => u.original === url);
+        const isNewUrl = !existingUrl;
+
         const newUrl = {
           id: data.id.toString(),
           original: url,
           short: newShortUrl,
-          clicks: 0,
-          created_at: new Date().toISOString(),
+          clicks: existingUrl?.clicks || 0,
+          created_at: existingUrl?.created_at || new Date().toISOString(),
         };
 
-        setUrls((prev) => [newUrl, ...prev]);
+        if (isNewUrl) {
+          setUrls((prev) => [newUrl, ...prev]);
+          toast.success("URL shortened successfully!");
+        } else {
+          // Update the existing URL with the latest data from server
+          setUrls((prev) => prev.map((u) => (u.original === url ? newUrl : u)));
+          toast.info("URL already shortened! Here's your existing short link.");
+        }
+
         setShortUrl(newShortUrl);
-        toast.success("URL shortened successfully!");
         setUrl("");
         return true;
       } else {
@@ -116,7 +128,7 @@ function App() {
     } finally {
       setIsLoading(false);
     }
-  }, [url, setUrls]);
+  }, [url, setUrls, urls]);
 
   const copyToClipboard = useCallback(async (text: string) => {
     try {

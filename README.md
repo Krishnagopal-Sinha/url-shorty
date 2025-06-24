@@ -4,7 +4,7 @@ Heyy there! Welcome to URL Shawty project, a chill and minimal URL shortener bui
 
 ---
 
-## 🐍 Backend Setup (FastAPI + Postgres)
+## Backend Setup (FastAPI + Postgres)
 
 1. **Clone the repo**
 
@@ -46,7 +46,7 @@ Heyy there! Welcome to URL Shawty project, a chill and minimal URL shortener bui
 
 ---
 
-## ⚡ Frontend Setup (React + Vite)
+## Frontend Setup (React + Vite)
 
 The frontend lives in the `frontend/` folder. It's built with React, Vite, and Tailwind for a super snappy experience.
 
@@ -84,7 +84,15 @@ The frontend lives in the `frontend/` folder. It's built with React, Vite, and T
 
 ---
 
-## 🗂️ File Structure (Quick Peek)
+## Tradeoffs
+
+- BE trackable analytics feature was not included as we wanted to ensure scalability is important, so made use of 301 redirect for cahcing on client's browser, thus, our redirect API will be only hit once per specific url
+- I was thinking of adding redis too for frequently used urls but since it wasn't mentioned in requirement docs, I did not use it
+- Since postgreSQL was mentioned in requirement I used it but for scaling, NoSQL db like mongoDB or supabase will better...
+
+---
+
+## File Structure (Quick Peek)
 
 - `main.py` — FastAPI backend entrypoint
 - `db/` — Database models and logic
@@ -93,7 +101,7 @@ The frontend lives in the `frontend/` folder. It's built with React, Vite, and T
 
 ---
 
-## 📝 Notes
+## Notes
 
 - The backend expects Postgres on port **5430**.
 - CORS is set up for local dev and production builds.

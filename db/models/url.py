@@ -19,6 +19,19 @@ class URL(Base):
     
     @staticmethod
     def generate_short_code(length: int = 6) -> str:
-        """generate a random short code for url shortening"""
-        characters = string.ascii_letters + string.digits
-        return ''.join(secrets.choice(characters) for _ in range(length)) 
+        """generate a base 62 encoded short code for url shortening"""
+        # base 62 characters: 0-9, a-z, A-Z
+        characters = string.digits + string.ascii_lowercase + string.ascii_uppercase
+        
+        random_number = secrets.randbelow(62 ** length)
+        
+        if random_number == 0:
+            return characters[0] * length
+        
+        result = ""
+        while random_number > 0:
+            random_number, remainder = divmod(random_number, 62)
+            result = characters[remainder] + result
+        
+        # Pad with leading zeros if needed
+        return result.zfill(length) 

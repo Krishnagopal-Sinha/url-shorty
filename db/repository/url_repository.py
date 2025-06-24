@@ -13,9 +13,26 @@ class URLRepository:
     def __init__(self, db: Session):
         self.db = db
     
+    def get_url_by_original_url(self, original_url: str) -> Optional[URL]:
+        """get url by original url"""
+        return self.db.query(URL).filter(URL.original_url == original_url).first()
+    
     def create_url(self, url_data: URLCreate, base_url: str) -> URLResponse:
-        """create a new shortened url"""
+        """create a new shortened url or return existing one if already shortened"""
         try:
+            # check if URL already exists
+            existing_url = self.get_url_by_original_url(str(url_data.original_url))
+            if existing_url:
+                logger.info(f"URL already shortened: {existing_url.original_url} -> {existing_url.short_code}")
+                short_url = f"{base_url}/{existing_url.short_code}"
+                return URLResponse(
+                    id=existing_url.id,
+                    original_url=existing_url.original_url,
+                    short_code=existing_url.short_code,
+                    short_url=short_url,
+                    created_at=existing_url.created_at
+                )
+            
             # create url instance (short_code will be auto-generated)
             db_url = URL(original_url=str(url_data.original_url))
             
