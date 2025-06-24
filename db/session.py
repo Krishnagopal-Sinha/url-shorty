@@ -11,6 +11,7 @@ SessionLocal = sessionmaker(autoflush=False, bind=engine)
 
 
 def get_db() -> Generator:
+    """get database session"""
     try:
         db = SessionLocal()
         yield db
