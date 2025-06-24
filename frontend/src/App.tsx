@@ -81,7 +81,7 @@ function App() {
 
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:8000/api/v1/urls/", {
+      const response = await fetch("/api/v1/urls/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -91,7 +91,7 @@ function App() {
 
       if (response.ok) {
         const data = await response.json();
-        const newShortUrl = `http://localhost:8000/${data.short_code}`;
+        const newShortUrl = `${window.location.origin}/${data.short_code}`;
         const newUrl = {
           id: data.id.toString(),
           original: url,
